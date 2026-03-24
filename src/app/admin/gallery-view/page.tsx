@@ -14,10 +14,10 @@ export default function GalleryViewPage() {
         </div>
         <div className="flex flex-wrap gap-3">
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
-            Download Report
+            Bulk Select
           </button>
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-[#1e90ff] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
-            Generate Invoice
+            Upload Photos
           </button>
         </div>
       </div>
@@ -73,136 +73,31 @@ export default function GalleryViewPage() {
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">Recent Airport Transfers</h2>
-                <p className="text-xs text-slate-500 mt-1">View and manage your latest pickup requests.</p>
+                <h2 className="text-lg font-bold text-slate-900">Media Grid</h2>
+                <p className="text-xs text-slate-500 mt-1">Review vehicle images used in public pages.</p>
               </div>
               <button className="text-sm font-semibold text-[#1e90ff] hover:underline whitespace-nowrap ml-4">View All &gt;</button>
             </div>
 
             <div className="overflow-x-auto -mx-4 md:mx-0 px-4 md:px-0">
-              <table className="w-full min-w-[600px] text-sm text-left">
-              <thead>
-                <tr className="text-slate-500 border-b border-slate-100">
-                  <th className="pb-3 font-medium">Customer</th>
-                  <th className="pb-3 font-medium">Route</th>
-                  <th className="pb-3 font-medium">Date & Time</th>
-                  <th className="pb-3 font-medium">Status</th>
-                  <th className="pb-3 font-medium">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50">
-                <tr>
-                  <td className="py-4">
-                    <div className="font-bold text-slate-900">James Miller</div>
-                    <div className="text-xs text-slate-500">BK-1024</div>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-[#1e90ff] text-[10px]">✈</div>
-                      CMB Airport &gt; Galle Fort
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 min-w-[640px]">
+                {[
+                  "https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=400",
+                  "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?q=80&w=400",
+                  "https://images.unsplash.com/photo-1568844293986-8d0400bd4745?q=80&w=400",
+                  "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?q=80&w=400",
+                  "https://images.unsplash.com/photo-1542282088-fe8426682b8f?q=80&w=400",
+                  "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?q=80&w=400"
+                ].map((src, idx) => (
+                  <div key={src} className="rounded-xl overflow-hidden border border-slate-200">
+                    <img src={src} className="w-full h-32 object-cover" />
+                    <div className="p-3 flex items-center justify-between">
+                      <p className="text-xs font-semibold text-slate-700">Vehicle #{idx + 1}</p>
+                      <button className="text-[10px] text-[#1e90ff] font-semibold">Set Cover</button>
                     </div>
-                  </td>
-                  <td className="py-4 text-slate-600 font-medium">
-                    <div>2023-11-25</div>
-                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 14:30
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Confirmed</span>
-                  </td>
-                  <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
-                </tr>
-                <tr>
-                  <td className="py-4">
-                    <div className="font-bold text-slate-900">Sophie Chen</div>
-                    <div className="text-xs text-slate-500">BK-1025</div>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-[#1e90ff] text-[10px]">✈</div>
-                      Negombo &gt; Sigiriya
-                    </div>
-                  </td>
-                  <td className="py-4 text-slate-600 font-medium">
-                    <div>2023-11-26</div>
-                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 09:00
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Pending</span>
-                  </td>
-                  <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
-                </tr>
-                <tr>
-                  <td className="py-4">
-                    <div className="font-bold text-slate-900">Robert Wilson</div>
-                    <div className="text-xs text-slate-500">BK-1026</div>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-[#1e90ff] text-[10px]">✈</div>
-                      CMB Airport &gt; Colombo 07
-                    </div>
-                  </td>
-                  <td className="py-4 text-slate-600 font-medium">
-                    <div>2023-11-26</div>
-                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 23:15
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Confirmed</span>
-                  </td>
-                  <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
-                </tr>
-                <tr>
-                  <td className="py-4">
-                    <div className="font-bold text-slate-900">Elena Rodriguez</div>
-                    <div className="text-xs text-slate-500">BK-1027</div>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-[#1e90ff] text-[10px]">✈</div>
-                      Kandy City &gt; Ella Station
-                    </div>
-                  </td>
-                  <td className="py-4 text-slate-600 font-medium">
-                    <div>2023-11-27</div>
-                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 11:45
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Confirmed</span>
-                  </td>
-                  <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
-                </tr>
-                <tr>
-                  <td className="py-4">
-                    <div className="font-bold text-slate-900">David Thompson</div>
-                    <div className="text-xs text-slate-500">BK-1028</div>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-[#1e90ff] text-[10px]">✈</div>
-                      CMB Airport &gt; Mirissa Beach
-                    </div>
-                  </td>
-                  <td className="py-4 text-slate-600 font-medium">
-                    <div>2023-11-28</div>
-                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 08:00
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Pending</span>
-                  </td>
-                  <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
-                </tr>
-              </tbody>
-            </table>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

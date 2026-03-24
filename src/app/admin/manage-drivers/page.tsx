@@ -14,10 +14,10 @@ export default function ManageDriversPage() {
         </div>
         <div className="flex flex-wrap gap-3">
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
-            Download Report
+            Export Drivers
           </button>
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-[#1e90ff] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
-            Generate Invoice
+            Add Driver
           </button>
         </div>
       </div>
@@ -73,8 +73,8 @@ export default function ManageDriversPage() {
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">Recent Airport Transfers</h2>
-                <p className="text-xs text-slate-500 mt-1">View and manage your latest pickup requests.</p>
+                <h2 className="text-lg font-bold text-slate-900">Driver Directory</h2>
+                <p className="text-xs text-slate-500 mt-1">Monitor availability and performance for each driver.</p>
               </div>
               <button className="text-sm font-semibold text-[#1e90ff] hover:underline whitespace-nowrap ml-4">View All &gt;</button>
             </div>
@@ -83,8 +83,8 @@ export default function ManageDriversPage() {
               <table className="w-full min-w-[600px] text-sm text-left">
               <thead>
                 <tr className="text-slate-500 border-b border-slate-100">
-                  <th className="pb-3 font-medium">Customer</th>
-                  <th className="pb-3 font-medium">Route</th>
+                  <th className="pb-3 font-medium">Driver</th>
+                  <th className="pb-3 font-medium">Assigned Route</th>
                   <th className="pb-3 font-medium">Date & Time</th>
                   <th className="pb-3 font-medium">Status</th>
                   <th className="pb-3 font-medium">Action</th>
@@ -93,8 +93,8 @@ export default function ManageDriversPage() {
               <tbody className="divide-y divide-slate-50">
                 <tr>
                   <td className="py-4">
-                    <div className="font-bold text-slate-900">James Miller</div>
-                    <div className="text-xs text-slate-500">BK-1024</div>
+                    <div className="font-bold text-slate-900">Nuwan Perera</div>
+                    <div className="text-xs text-slate-500">DRV-201</div>
                   </td>
                   <td className="py-4">
                     <div className="flex items-center gap-2 text-slate-600 font-medium">
@@ -104,12 +104,10 @@ export default function ManageDriversPage() {
                   </td>
                   <td className="py-4 text-slate-600 font-medium">
                     <div>2023-11-25</div>
-                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 14:30
-                    </div>
+                    <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5"><Clock className="w-3 h-3" /> 6 jobs today</div>
                   </td>
                   <td className="py-4">
-                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Confirmed</span>
+                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Available</span>
                   </td>
                   <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
                 </tr>

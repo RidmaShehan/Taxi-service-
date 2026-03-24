@@ -14,10 +14,10 @@ export default function ReviewsAdminPage() {
         </div>
         <div className="flex flex-wrap gap-3">
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
-            Download Report
+            Export Ratings
           </button>
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-[#1e90ff] text-white rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
-            Generate Invoice
+            Publish Selected
           </button>
         </div>
       </div>
@@ -31,8 +31,8 @@ export default function ReviewsAdminPage() {
             </div>
             <span className="text-xs font-bold text-slate-900">+12.5%</span>
           </div>
-          <div className="text-sm text-slate-500 font-medium mb-1">Total Bookings</div>
-          <div className="text-2xl font-bold text-slate-900">1,284</div>
+          <div className="text-sm text-slate-500 font-medium mb-1">Pending Reviews</div>
+          <div className="text-2xl font-bold text-slate-900">12</div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
           <div className="flex justify-between items-start mb-4">
@@ -41,8 +41,8 @@ export default function ReviewsAdminPage() {
             </div>
             <span className="text-xs font-bold text-slate-900">95% util.</span>
           </div>
-          <div className="text-sm text-slate-500 font-medium mb-1">Active Fleet</div>
-          <div className="text-2xl font-bold text-slate-900">18</div>
+          <div className="text-sm text-slate-500 font-medium mb-1">Published Reviews</div>
+          <div className="text-2xl font-bold text-slate-900">148</div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
           <div className="flex justify-between items-start mb-4">
@@ -51,8 +51,8 @@ export default function ReviewsAdminPage() {
             </div>
             <span className="text-xs font-bold text-slate-900">+8.2%</span>
           </div>
-          <div className="text-sm text-slate-500 font-medium mb-1">Monthly Revenue</div>
-          <div className="text-2xl font-bold text-slate-900">$14,580</div>
+          <div className="text-sm text-slate-500 font-medium mb-1">Flagged</div>
+          <div className="text-2xl font-bold text-slate-900">2</div>
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
           <div className="flex justify-between items-start mb-4">
@@ -61,7 +61,7 @@ export default function ReviewsAdminPage() {
             </div>
             <span className="text-xs font-bold text-slate-900">Excellent</span>
           </div>
-          <div className="text-sm text-slate-500 font-medium mb-1">Avg. Rating</div>
+          <div className="text-sm text-slate-500 font-medium mb-1">Avg. Review Score</div>
           <div className="text-2xl font-bold text-slate-900">4.9 / 5</div>
         </div>
       </div>
@@ -73,8 +73,8 @@ export default function ReviewsAdminPage() {
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-4 md:p-6">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">Recent Airport Transfers</h2>
-                <p className="text-xs text-slate-500 mt-1">View and manage your latest pickup requests.</p>
+                <h2 className="text-lg font-bold text-slate-900">Pending Reviews Queue</h2>
+                <p className="text-xs text-slate-500 mt-1">Approve or reject incoming customer feedback.</p>
               </div>
               <button className="text-sm font-semibold text-[#1e90ff] hover:underline whitespace-nowrap ml-4">View All &gt;</button>
             </div>
@@ -84,8 +84,8 @@ export default function ReviewsAdminPage() {
               <thead>
                 <tr className="text-slate-500 border-b border-slate-100">
                   <th className="pb-3 font-medium">Customer</th>
-                  <th className="pb-3 font-medium">Route</th>
-                  <th className="pb-3 font-medium">Date & Time</th>
+                  <th className="pb-3 font-medium">Review Snippet</th>
+                  <th className="pb-3 font-medium">Submitted</th>
                   <th className="pb-3 font-medium">Status</th>
                   <th className="pb-3 font-medium">Action</th>
                 </tr>
@@ -97,19 +97,16 @@ export default function ReviewsAdminPage() {
                     <div className="text-xs text-slate-500">BK-1024</div>
                   </td>
                   <td className="py-4">
-                    <div className="flex items-center gap-2 text-slate-600 font-medium">
-                      <div className="w-5 h-5 rounded-full bg-blue-50 flex items-center justify-center text-[#1e90ff] text-[10px]">✈</div>
-                      CMB Airport &gt; Galle Fort
-                    </div>
+                    <div className="text-slate-600 font-medium">"Driver was on time and very professional..."</div>
                   </td>
                   <td className="py-4 text-slate-600 font-medium">
                     <div>2023-11-25</div>
                     <div className="text-xs text-slate-400 font-normal flex items-center gap-1 mt-0.5">
-                      <Clock className="w-3 h-3" /> 14:30
+                      <Clock className="w-3 h-3" /> 2 hours ago
                     </div>
                   </td>
                   <td className="py-4">
-                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Confirmed</span>
+                    <span className="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-md text-[10px] font-bold uppercase tracking-wider">Pending</span>
                   </td>
                   <td className="py-4 text-slate-400"><MoreVertical className="w-4 h-4 cursor-pointer hover:text-slate-600" /></td>
                 </tr>
