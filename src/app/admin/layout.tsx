@@ -2,10 +2,18 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { LayoutDashboard, Calendar, Car, Star, LogOut, Menu, X } from "lucide-react";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const navItems = [
+    { href: "/admin", label: "Overview", icon: LayoutDashboard },
+    { href: "/admin/bookings", label: "Bookings", icon: Calendar },
+    { href: "/admin/fleet", label: "Fleet", icon: Car },
+    { href: "/admin/reviews", label: "Reviews", icon: Star },
+  ];
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex flex-col md:flex-row">
@@ -72,34 +80,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             MANAGEMENT
           </div>
           <nav className="space-y-1">
-            <Link 
-              href="/admin" 
-              className="flex items-center gap-3 px-3 py-2.5 bg-[#f4f9ff] text-[#1e90ff] rounded-lg font-medium text-sm"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <LayoutDashboard className="w-4 h-4" /> Overview
-            </Link>
-            <Link 
-              href="/admin/bookings" 
-              className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg font-medium text-sm transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Calendar className="w-4 h-4" /> Bookings
-            </Link>
-            <Link 
-              href="/admin/fleet" 
-              className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg font-medium text-sm transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Car className="w-4 h-4" /> Fleet
-            </Link>
-            <Link 
-              href="/admin/reviews" 
-              className="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg font-medium text-sm transition-colors"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <Star className="w-4 h-4" /> Reviews
-            </Link>
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg font-medium text-sm transition-colors ${
+                    isActive
+                      ? "bg-[#f4f9ff] text-[#1e90ff]"
+                      : "text-slate-600 hover:bg-slate-50"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Icon className="w-4 h-4" /> {item.label}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 

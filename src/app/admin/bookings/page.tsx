@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { Users, Car, DollarSign, Star, MoreVertical, Upload, Check, X, Plus, Calendar, Image as ImageIcon, Clock } from "lucide-react";
 
-export default function AdminDashboard() {
+export default function BookingsPage() {
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-8 gap-4">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Dashboard</h1>
-          <p className="text-slate-500 text-sm">Welcome back, Admin. Here's what's happening with LankaRide today.</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mb-1">Bookings</h1>
+          <p className="text-slate-500 text-sm">Track, confirm, and manage all customer booking requests.</p>
         </div>
         <div className="flex flex-wrap gap-3">
           <button className="flex-1 md:flex-none px-5 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors">
