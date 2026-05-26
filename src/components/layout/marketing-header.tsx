@@ -19,11 +19,15 @@ export function MarketingHeader({ settings }: Props) {
         <div className="flex h-20 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             {settings.logo_url ? (
-              <DbImage
-                src={settings.logo_url}
-                alt={settings.site_name}
-                className="h-10 w-auto max-w-[140px] object-contain"
-              />
+              <span className="relative block h-10 w-[140px] shrink-0">
+                <DbImage
+                  src={settings.logo_url}
+                  alt={settings.site_name}
+                  fill
+                  fit="contain"
+                  className="object-left"
+                />
+              </span>
             ) : (
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1e90ff] text-white font-bold text-sm">
                 LR

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Star } from "lucide-react";
-import { DbImage } from "@/components/ui/db-image";
+import { DbImage, ImageFrame } from "@/components/ui/db-image";
 import type { SiteSettings } from "@/types/site-settings";
 
 type Props = { settings: SiteSettings };
@@ -58,15 +58,9 @@ export function Hero({ settings }: Props) {
         </div>
 
         <div className="relative">
-          <div className="rounded-2xl overflow-hidden shadow-2xl">
-            <DbImage
-              src={heroImage}
-              alt={settings.site_name}
-              width={800}
-              height={500}
-              className="w-full object-cover aspect-[4/3]"
-            />
-          </div>
+          <ImageFrame className="h-[320px] md:h-[400px] rounded-2xl shadow-2xl">
+            <DbImage src={heroImage} alt={settings.site_name} fill />
+          </ImageFrame>
         </div>
       </div>
     </div>

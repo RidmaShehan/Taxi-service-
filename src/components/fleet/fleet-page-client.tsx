@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { ShieldCheck, Sparkles, UserCheck, Users, Luggage, Snowflake, Info } from "lucide-react";
-import { DbImage } from "@/components/ui/db-image";
+import { DbImage, ImageFrame } from "@/components/ui/db-image";
 import type { CarRow } from "@/types/database.types";
 
 const filters = ["All", "Sedan", "SUV", "Van", "Premium"];
@@ -82,7 +82,7 @@ export function FleetPageClient({ cars }: Props) {
             <div className="grid md:grid-cols-3 gap-8 mb-20">
               {filtered.map((vehicle) => (
                 <div key={vehicle.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col">
-                  <div className="relative h-56 bg-slate-100">
+                  <ImageFrame className="h-56">
                     <div className="absolute top-4 left-4 bg-[#1e90ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider z-10">
                       {vehicle.category}
                     </div>
@@ -91,11 +91,11 @@ export function FleetPageClient({ cars }: Props) {
                       ${vehicle.price_per_ride}
                     </div>
                     {vehicle.image_url ? (
-                      <DbImage src={vehicle.image_url} alt={vehicle.name} fill className="object-cover" />
+                      <DbImage src={vehicle.image_url} alt={vehicle.name} fill />
                     ) : (
-                      <div className="flex items-center justify-center h-full text-5xl">🚗</div>
+                      <div className="absolute inset-0 flex items-center justify-center text-5xl">🚗</div>
                     )}
-                  </div>
+                  </ImageFrame>
 
                   <div className="p-6 flex-1 flex flex-col">
                     <h3 className="text-lg font-bold text-slate-900 mb-2">{vehicle.name}</h3>

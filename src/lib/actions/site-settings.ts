@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_SITE_SETTINGS } from "@/lib/site-settings-defaults";
-import { siteSettingsSchema } from "@/lib/validations";
+import { formatZodError, siteSettingsSchema } from "@/lib/validations";
 import type { SiteSettings } from "@/types/site-settings";
 
 const REVALIDATE_PATHS = [
@@ -121,13 +121,7 @@ export async function updateSiteSettings(formData: FormData) {
   });
 
   if (!parsed.success) {
-    const first = parsed.error.issues[0];
-    const field = first?.path.join(".") ?? "settings";
-    return {
-      error: first?.message
-        ? `${field}: ${first.message}`
-        : "Invalid settings",
-    };
+    return { error: formatZodError(parsed.error) };
   }
 
   const d = parsed.data;

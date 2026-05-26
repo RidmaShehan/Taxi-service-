@@ -29,7 +29,9 @@ export function FleetGrid({ cars }: { cars: CarRow[] }) {
         {cars.map((v) => (
           <div key={v.id} className="rounded-xl border border-slate-200 p-4">
             {v.image_url && (
-              <img src={v.image_url} alt={v.name} className="w-full h-32 object-cover rounded-lg mb-3" />
+              <div className="relative h-32 w-full overflow-hidden rounded-lg mb-3 bg-slate-100">
+                <img src={v.image_url} alt={v.name} className="absolute inset-0 h-full w-full object-cover" />
+              </div>
             )}
             <div className="flex items-center justify-between mb-3">
               <div className="w-9 h-9 rounded-full bg-blue-50 text-[#1e90ff] flex items-center justify-center">

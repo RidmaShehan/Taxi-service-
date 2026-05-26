@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { fileToBase64DataUrl } from "@/lib/images";
-import { carSchema } from "@/lib/validations";
+import { carSchema, formatZodError } from "@/lib/validations";
+import { formEntry } from "@/lib/zod-form";
 import type { CarRow } from "@/types/database.types";
 
 const REVALIDATE_PATHS = ["/", "/fleet", "/admin", "/admin/fleet", "/admin/add-vehicle"];
@@ -43,19 +44,19 @@ export async function getCarById(id: string): Promise<CarRow | null> {
 
 export async function createCar(formData: FormData) {
   const parsed = carSchema.safeParse({
-    name: formData.get("name"),
-    description: formData.get("description") || undefined,
-    category: formData.get("category"),
-    price_per_ride: formData.get("price_per_ride"),
-    seats: formData.get("seats"),
-    luggage: formData.get("luggage"),
-    image_url: formData.get("image_url") || undefined,
-    status: formData.get("status") || "available",
+    name: formEntry(formData.get("name")),
+    description: formEntry(formData.get("description")),
+    category: formEntry(formData.get("category")),
+    price_per_ride: formEntry(formData.get("price_per_ride")),
+    seats: formEntry(formData.get("seats")),
+    luggage: formEntry(formData.get("luggage")),
+    image_url: formEntry(formData.get("image_url")),
+    status: formEntry(formData.get("status")),
     featured: formData.get("featured") === "true",
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid data" };
+    return { error: formatZodError(parsed.error) };
   }
 
   const supabase = await createClient();
@@ -73,19 +74,19 @@ export async function createCar(formData: FormData) {
 
 export async function updateCar(id: string, formData: FormData) {
   const parsed = carSchema.safeParse({
-    name: formData.get("name"),
-    description: formData.get("description") || undefined,
-    category: formData.get("category"),
-    price_per_ride: formData.get("price_per_ride"),
-    seats: formData.get("seats"),
-    luggage: formData.get("luggage"),
-    image_url: formData.get("image_url") || undefined,
-    status: formData.get("status") || "available",
+    name: formEntry(formData.get("name")),
+    description: formEntry(formData.get("description")),
+    category: formEntry(formData.get("category")),
+    price_per_ride: formEntry(formData.get("price_per_ride")),
+    seats: formEntry(formData.get("seats")),
+    luggage: formEntry(formData.get("luggage")),
+    image_url: formEntry(formData.get("image_url")),
+    status: formEntry(formData.get("status")),
     featured: formData.get("featured") === "true",
   });
 
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Invalid data" };
+    return { error: formatZodError(parsed.error) };
   }
 
   const supabase = await createClient();

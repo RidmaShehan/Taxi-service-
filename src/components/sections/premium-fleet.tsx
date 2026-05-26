@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Users, Luggage, Snowflake, Star } from "lucide-react";
-import { DbImage } from "@/components/ui/db-image";
+import { DbImage, ImageFrame } from "@/components/ui/db-image";
 import type { CarRow } from "@/types/database.types";
 
 type Props = { cars: CarRow[] };
@@ -35,24 +35,18 @@ export function PremiumFleet({ cars }: Props) {
         <div className="grid md:grid-cols-2 gap-8">
           {cars.map((car) => (
             <div key={car.id} className="bg-white border border-slate-200 rounded-2xl overflow-hidden hover:shadow-lg transition-all flex flex-col">
-              <div className="relative h-64 bg-slate-50 p-6 flex items-center justify-center">
+              <ImageFrame className="h-64">
                 {car.featured && (
                   <div className="absolute top-4 left-4 bg-[#1e90ff] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider z-10">
                     Featured
                   </div>
                 )}
                 {car.image_url ? (
-                  <DbImage
-                    src={car.image_url}
-                    alt={car.name}
-                    width={400}
-                    height={250}
-                    className="object-contain mix-blend-multiply drop-shadow-xl"
-                  />
+                  <DbImage src={car.image_url} alt={car.name} fill className="object-cover" />
                 ) : (
-                  <div className="text-4xl">🚗</div>
+                  <div className="absolute inset-0 flex items-center justify-center text-5xl bg-slate-50">🚗</div>
                 )}
-              </div>
+              </ImageFrame>
 
               <div className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-6">

@@ -1,147 +1,171 @@
 import { z } from "zod";
+import { zFormEmail, zFormOptionalString, zFormUrl } from "@/lib/zod-form";
+
+const zFormRequired = (min: number, message?: string) =>
+  z.preprocess(
+    (v) => (v === null || v === undefined ? "" : String(v)),
+    z.string().min(min, message)
+  );
+
+const zFormUuidNullable = z.preprocess(
+  (v) => (v === null || v === undefined || v === "" ? null : String(v)),
+  z.union([z.string().uuid(), z.null()]).optional()
+);
+
+const carStatusSchema = z.preprocess(
+  (v) => (v === null || v === undefined || v === "" ? "available" : String(v)),
+  z.enum(["available", "in_service", "maintenance"])
+);
+
+const driverStatusSchema = z.preprocess(
+  (v) => (v === null || v === undefined || v === "" ? "available" : String(v)),
+  z.enum(["available", "pending", "confirmed", "off_duty"])
+);
+
+const bookingStatusSchema = z.preprocess(
+  (v) => (v === null || v === undefined || v === "" ? "pending" : String(v)),
+  z.enum(["pending", "confirmed", "cancelled"])
+);
 
 export const bookingSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email"),
-  phone: z.string().min(6, "Phone required"),
-  pickup_location: z.string().min(2, "Pickup location required"),
-  destination: z.string().min(2, "Destination required"),
-  date_time: z.string().min(1, "Date and time required"),
+  name: zFormRequired(2, "Name must be at least 2 characters"),
+  email: zFormEmail,
+  phone: zFormRequired(6, "Phone required"),
+  pickup_location: zFormRequired(2, "Pickup location required"),
+  destination: zFormRequired(2, "Destination required"),
+  date_time: zFormRequired(1, "Date and time required"),
   passenger_count: z.coerce.number().int().positive("At least 1 passenger"),
-  message: z.string().max(1000).optional().or(z.literal("")),
-  vehicle_type: z.string().optional(),
-  car_id: z.string().uuid().optional().nullable(),
-  driver_id: z.string().uuid().optional().nullable(),
-  status: z.enum(["pending", "confirmed", "cancelled"]).optional(),
+  message: zFormOptionalString,
+  vehicle_type: zFormOptionalString,
+  car_id: zFormUuidNullable,
+  driver_id: zFormUuidNullable,
+  status: bookingStatusSchema.optional(),
 });
 
 export type BookingFormValues = z.infer<typeof bookingSchema>;
 
 export const carSchema = z.object({
-  name: z.string().min(1, "Name required"),
-  description: z.string().optional(),
-  category: z.string().min(1, "Category required"),
+  name: zFormRequired(1, "Name required"),
+  description: zFormOptionalString,
+  category: zFormRequired(1, "Category required"),
   price_per_ride: z.coerce.number().min(0),
   seats: z.coerce.number().int().positive(),
   luggage: z.coerce.number().int().min(0),
-  image_url: z.string().optional(),
-  status: z.enum(["available", "in_service", "maintenance"]).default("available"),
-  featured: z.coerce.boolean().optional(),
+  image_url: zFormOptionalString,
+  status: carStatusSchema,
+  featured: z.preprocess((v) => v === true || v === "true", z.boolean().optional()),
 });
 
 export type CarFormValues = z.infer<typeof carSchema>;
 
 export const driverSchema = z.object({
-  name: z.string().min(2),
-  driver_code: z.string().min(2),
-  phone: z.string().min(6),
-  status: z.enum(["available", "pending", "confirmed", "off_duty"]).default("available"),
-  rating: z.coerce.number().min(0).max(5).default(5),
-  car_id: z.string().uuid().optional().nullable(),
+  name: zFormRequired(2),
+  driver_code: zFormRequired(2),
+  phone: zFormRequired(6),
+  status: driverStatusSchema,
+  rating: z.coerce.number().min(0).max(5),
+  car_id: zFormUuidNullable,
 });
 
 export type DriverFormValues = z.infer<typeof driverSchema>;
 
 export const testimonialSchema = z.object({
-  name: z.string().min(2),
-  country: z.string().optional(),
-  review: z.string().min(10),
+  name: zFormRequired(2),
+  country: zFormOptionalString,
+  review: zFormRequired(10),
   rating: z.coerce.number().int().min(1).max(5),
 });
 
 export type TestimonialFormValues = z.infer<typeof testimonialSchema>;
 
 export const reviewSchema = z.object({
-  name: z.string().min(2),
-  review: z.string().min(10),
+  name: zFormRequired(2),
+  review: zFormRequired(10),
   rating: z.coerce.number().int().min(1).max(5),
-  country: z.string().optional(),
-  route: z.string().optional(),
-  approved: z.boolean().optional(),
+  country: zFormOptionalString,
+  route: zFormOptionalString,
+  approved: z.preprocess((v) => v === true || v === "true", z.boolean().optional()),
 });
 
 export type ReviewFormValues = z.infer<typeof reviewSchema>;
 
 export const galleryImageSchema = z.object({
-  image_url: z.string().min(1),
-  caption: z.string().optional(),
-  car_id: z.string().uuid().optional().nullable(),
-  is_visible: z.boolean().optional(),
+  image_url: zFormRequired(1, "Image required"),
+  caption: zFormOptionalString,
+  car_id: zFormUuidNullable,
+  is_visible: z.preprocess((v) => v === true || v === "true", z.boolean().optional()),
   sort_order: z.coerce.number().int().optional(),
 });
 
 export type GalleryImageFormValues = z.infer<typeof galleryImageSchema>;
 
 export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+  email: zFormEmail,
+  password: z.preprocess(
+    (v) => (v === null || v === undefined ? "" : String(v)),
+    z.string().min(6)
+  ),
 });
 
 export type LoginFormValues = z.infer<typeof loginSchema>;
 
-const optionalString = z.preprocess(
-  (v) => (v === null || v === undefined ? undefined : String(v)),
-  z.string().optional()
-);
-
-const optionalUrl = z.preprocess(
-  (v) => {
-    if (v === null || v === undefined || v === "") return undefined;
-    return String(v);
-  },
-  z.union([z.string().url(), z.literal("")]).optional()
-);
-
 export const siteSettingsSchema = z.object({
-  site_name: z.string().min(1),
-  site_description: z.string().min(1),
-  meta_title: z.string().min(1),
-  meta_keywords: optionalString,
-  meta_robots: optionalString,
-  canonical_url: optionalUrl,
-  og_title: optionalString,
-  og_description: optionalString,
-  og_image_url: optionalString,
-  logo_url: optionalString,
-  favicon_url: optionalString,
-  phone: z.string().min(6),
-  email: z.string().email(),
-  whatsapp_phone: z.string().min(6),
-  address_street: optionalString,
-  address_locality: optionalString,
-  address_region: optionalString,
-  postal_code: optionalString,
-  address_country: optionalString,
-  address_display: optionalString,
-  contact_page_title: optionalString,
-  contact_page_subtitle: optionalString,
-  contact_hub_title: optionalString,
-  map_embed_url: optionalString,
-  map_link_url: optionalUrl,
-  hours_airport: optionalString,
-  hours_office: optionalString,
-  hours_response: optionalString,
-  hero_badge: optionalString,
-  hero_title: optionalString,
-  hero_subtitle: optionalString,
-  hero_image_url: optionalString,
-  hero_travelers_label: optionalString,
-  stat_1_value: optionalString,
-  stat_1_label: optionalString,
-  stat_2_value: optionalString,
-  stat_2_label: optionalString,
-  stat_3_value: optionalString,
-  stat_3_label: optionalString,
-  stat_4_value: optionalString,
-  stat_4_label: optionalString,
-  footer_description: optionalString,
-  cta_title: optionalString,
-  cta_subtitle: optionalString,
-  facebook_url: optionalUrl,
-  twitter_url: optionalUrl,
-  instagram_url: optionalUrl,
-  maintenance_mode: z.boolean().optional(),
-  maintenance_message: optionalString,
+  site_name: zFormRequired(1),
+  site_description: zFormRequired(1),
+  meta_title: zFormRequired(1),
+  meta_keywords: zFormOptionalString,
+  meta_robots: zFormOptionalString,
+  canonical_url: zFormUrl,
+  og_title: zFormOptionalString,
+  og_description: zFormOptionalString,
+  og_image_url: zFormOptionalString,
+  logo_url: zFormOptionalString,
+  favicon_url: zFormOptionalString,
+  phone: zFormRequired(6),
+  email: zFormEmail,
+  whatsapp_phone: zFormRequired(6),
+  address_street: zFormOptionalString,
+  address_locality: zFormOptionalString,
+  address_region: zFormOptionalString,
+  postal_code: zFormOptionalString,
+  address_country: zFormOptionalString,
+  address_display: zFormOptionalString,
+  contact_page_title: zFormOptionalString,
+  contact_page_subtitle: zFormOptionalString,
+  contact_hub_title: zFormOptionalString,
+  map_embed_url: zFormOptionalString,
+  map_link_url: zFormUrl,
+  hours_airport: zFormOptionalString,
+  hours_office: zFormOptionalString,
+  hours_response: zFormOptionalString,
+  hero_badge: zFormOptionalString,
+  hero_title: zFormOptionalString,
+  hero_subtitle: zFormOptionalString,
+  hero_image_url: zFormOptionalString,
+  hero_travelers_label: zFormOptionalString,
+  stat_1_value: zFormOptionalString,
+  stat_1_label: zFormOptionalString,
+  stat_2_value: zFormOptionalString,
+  stat_2_label: zFormOptionalString,
+  stat_3_value: zFormOptionalString,
+  stat_3_label: zFormOptionalString,
+  stat_4_value: zFormOptionalString,
+  stat_4_label: zFormOptionalString,
+  footer_description: zFormOptionalString,
+  cta_title: zFormOptionalString,
+  cta_subtitle: zFormOptionalString,
+  facebook_url: zFormUrl,
+  twitter_url: zFormUrl,
+  instagram_url: zFormUrl,
+  maintenance_mode: z.preprocess((v) => v === true || v === "true", z.boolean().optional()),
+  maintenance_message: zFormOptionalString,
 });
 
 export type SiteSettingsFormValues = z.infer<typeof siteSettingsSchema>;
+
+/** Human-readable first validation error for server actions. */
+export function formatZodError(error: z.ZodError): string {
+  const first = error.issues[0];
+  const field = first?.path.join(".") ?? "field";
+  return first?.message ? `${field}: ${first.message}` : "Invalid data";
+}

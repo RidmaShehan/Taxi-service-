@@ -33,8 +33,10 @@ export async function fileToBase64DataUrl(
 
 /** Use as img/Image src — supports http(s) URLs and base64 data URLs. */
 export function imageSrc(value: string | null | undefined): string | undefined {
-  if (!value) return undefined;
-  return value;
+  if (value == null) return undefined;
+  const trimmed = String(value).trim();
+  if (!trimmed) return undefined;
+  return trimmed;
 }
 
 export function isBase64DataUrl(value: string): boolean {
