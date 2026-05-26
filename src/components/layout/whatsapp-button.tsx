@@ -1,10 +1,12 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-import { siteConfig } from "@/config/site";
+import type { SiteSettings } from "@/types/site-settings";
 
-export function WhatsappButton() {
-  const whatsappUrl = `https://wa.me/${siteConfig.whatsappPhone}?text=Hi,%20I%20would%20like%20to%20book%20an%20airport%20taxi.`;
+type Props = { settings: SiteSettings };
+
+export function WhatsappButton({ settings }: Props) {
+  const whatsappUrl = `https://wa.me/${settings.whatsapp_phone}?text=Hi,%20I%20would%20like%20to%20book%20an%20airport%20taxi.`;
 
   return (
     <a

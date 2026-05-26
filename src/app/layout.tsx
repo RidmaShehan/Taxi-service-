@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { getSiteSettings } from "@/lib/actions/site-settings";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -12,11 +13,37 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Colombo Airport Taxi",
-  description:
-    "Private airport taxi and custom tours across Sri Lanka with professional English-speaking drivers.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const s = await getSiteSettings();
+  const keywords = s.meta_keywords
+    ?.split(",")
+    .map((k) => k.trim())
+    .filter(Boolean);
+
+  return {
+    title: s.meta_title,
+    description: s.site_description,
+    icons: s.favicon_url
+      ? { icon: [{ url: s.favicon_url }], apple: [{ url: s.favicon_url }] }
+      : undefined,
+    keywords: keywords?.length ? keywords : undefined,
+    robots: s.meta_robots ?? "index, follow",
+    ...(s.canonical_url ? { alternates: { canonical: s.canonical_url } } : {}),
+    openGraph: {
+      title: s.og_title ?? s.meta_title,
+      description: s.og_description ?? s.site_description,
+      siteName: s.site_name,
+      type: "website",
+      ...(s.og_image_url ? { images: [{ url: s.og_image_url }] } : {}),
+    },
+    twitter: {
+      card: s.og_image_url ? "summary_large_image" : "summary",
+      title: s.og_title ?? s.meta_title,
+      description: s.og_description ?? s.site_description,
+      ...(s.og_image_url ? { images: [s.og_image_url] } : {}),
+    },
+  };
+}
 
 export default function RootLayout({
   children,

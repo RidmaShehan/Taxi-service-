@@ -8,9 +8,12 @@ export const marketingNav = [
 ] as const;
 
 export const adminNav = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/bookings", label: "Bookings" },
-  { href: "/dashboard/cars", label: "Cars" },
-  { href: "/dashboard/testimonials", label: "Testimonials" },
-  { href: "/dashboard/reviews", label: "Reviews" },
+  { href: "/admin", label: "Overview" },
+  { href: "/admin/bookings", label: "Bookings" },
+  { href: "/admin/fleet", label: "Fleet" },
+  { href: "/admin/reviews", label: "Reviews" },
+  { href: "/admin/manage-drivers", label: "Drivers" },
+  { href: "/admin/gallery-view", label: "Gallery" },
 ] as const;
+
+export { siteConfig };

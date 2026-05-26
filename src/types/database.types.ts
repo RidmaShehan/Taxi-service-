@@ -6,9 +6,110 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export interface Database {
+export type UserRole = "user" | "admin";
+export type CarStatus = "available" | "in_service" | "maintenance";
+export type BookingStatus = "pending" | "confirmed" | "cancelled";
+export type DriverStatus = "available" | "pending" | "confirmed" | "off_duty";
+
+export type Database = {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          id: string;
+          email: string;
+          role: UserRole;
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          email: string;
+          role?: UserRole;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          email?: string;
+          role?: UserRole;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      cars: {
+        Row: {
+          id: string;
+          name: string;
+          description: string | null;
+          category: string;
+          price_per_ride: number;
+          seats: number;
+          luggage: number;
+          image_url: string | null;
+          status: CarStatus;
+          featured: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          description?: string | null;
+          category?: string;
+          price_per_ride?: number;
+          seats: number;
+          luggage?: number;
+          image_url?: string | null;
+          status?: CarStatus;
+          featured?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          description?: string | null;
+          category?: string;
+          price_per_ride?: number;
+          seats?: number;
+          luggage?: number;
+          image_url?: string | null;
+          status?: CarStatus;
+          featured?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      drivers: {
+        Row: {
+          id: string;
+          name: string;
+          driver_code: string;
+          phone: string;
+          status: DriverStatus;
+          rating: number;
+          car_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          driver_code: string;
+          phone: string;
+          status?: DriverStatus;
+          rating?: number;
+          car_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          driver_code?: string;
+          phone?: string;
+          status?: DriverStatus;
+          rating?: number;
+          car_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       bookings: {
         Row: {
           id: string;
@@ -20,30 +121,45 @@ export interface Database {
           date_time: string;
           passenger_count: number;
           message: string | null;
-          status: "pending" | "confirmed" | "cancelled";
+          vehicle_type: string | null;
+          car_id: string | null;
+          driver_id: string | null;
+          status: BookingStatus;
           created_at: string;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["bookings"]["Row"],
-          "id" | "created_at" | "status"
-        > & { status?: "pending" | "confirmed" | "cancelled" };
-        Update: Partial<Database["public"]["Tables"]["bookings"]["Row"]>;
-      };
-      cars: {
-        Row: {
-          id: string;
+        Insert: {
+          id?: string;
           name: string;
-          description: string | null;
-          seats: number;
-          luggage: number;
-          image_url: string | null;
-          created_at: string;
+          email: string;
+          phone: string;
+          pickup_location: string;
+          destination: string;
+          date_time: string;
+          passenger_count?: number;
+          message?: string | null;
+          vehicle_type?: string | null;
+          car_id?: string | null;
+          driver_id?: string | null;
+          status?: BookingStatus;
+          created_at?: string;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["cars"]["Row"],
-          "id" | "created_at"
-        >;
-        Update: Partial<Database["public"]["Tables"]["cars"]["Row"]>;
+        Update: {
+          id?: string;
+          name?: string;
+          email?: string;
+          phone?: string;
+          pickup_location?: string;
+          destination?: string;
+          date_time?: string;
+          passenger_count?: number;
+          message?: string | null;
+          vehicle_type?: string | null;
+          car_id?: string | null;
+          driver_id?: string | null;
+          status?: BookingStatus;
+          created_at?: string;
+        };
+        Relationships: [];
       };
       testimonials: {
         Row: {
@@ -54,11 +170,23 @@ export interface Database {
           rating: number;
           created_at: string;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["testimonials"]["Row"],
-          "id" | "created_at"
-        >;
-        Update: Partial<Database["public"]["Tables"]["testimonials"]["Row"]>;
+        Insert: {
+          id?: string;
+          name: string;
+          country?: string | null;
+          review: string;
+          rating: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          country?: string | null;
+          review?: string;
+          rating?: number;
+          created_at?: string;
+        };
+        Relationships: [];
       };
       reviews: {
         Row: {
@@ -66,34 +194,317 @@ export interface Database {
           name: string;
           review: string;
           rating: number;
+          country: string | null;
+          route: string | null;
           approved: boolean;
           created_at: string;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["reviews"]["Row"],
-          "id" | "created_at" | "approved"
-        > & { approved?: boolean };
-        Update: Partial<Database["public"]["Tables"]["reviews"]["Row"]>;
+        Insert: {
+          id?: string;
+          name: string;
+          review: string;
+          rating: number;
+          country?: string | null;
+          route?: string | null;
+          approved?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          review?: string;
+          rating?: number;
+          country?: string | null;
+          route?: string | null;
+          approved?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
       };
-      profiles: {
+      site_settings: {
+        Row: {
+          id: number;
+          site_name: string;
+          site_description: string;
+          meta_title: string;
+          meta_keywords: string | null;
+          meta_robots: string | null;
+          canonical_url: string | null;
+          og_title: string | null;
+          og_description: string | null;
+          og_image_url: string | null;
+          logo_url: string | null;
+          favicon_url: string | null;
+          phone: string;
+          email: string;
+          whatsapp_phone: string;
+          address_street: string | null;
+          address_locality: string | null;
+          address_region: string | null;
+          postal_code: string | null;
+          address_country: string | null;
+          address_display: string | null;
+          contact_page_title: string | null;
+          contact_page_subtitle: string | null;
+          contact_hub_title: string | null;
+          map_embed_url: string | null;
+          map_link_url: string | null;
+          hours_airport: string | null;
+          hours_office: string | null;
+          hours_response: string | null;
+          hero_badge: string | null;
+          hero_title: string | null;
+          hero_subtitle: string | null;
+          hero_image_url: string | null;
+          hero_travelers_label: string | null;
+          stat_1_value: string | null;
+          stat_1_label: string | null;
+          stat_2_value: string | null;
+          stat_2_label: string | null;
+          stat_3_value: string | null;
+          stat_3_label: string | null;
+          stat_4_value: string | null;
+          stat_4_label: string | null;
+          footer_description: string | null;
+          cta_title: string | null;
+          cta_subtitle: string | null;
+          facebook_url: string | null;
+          twitter_url: string | null;
+          instagram_url: string | null;
+          maintenance_mode: boolean;
+          maintenance_message: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id?: number;
+          site_name?: string;
+          site_description?: string;
+          meta_title?: string;
+          meta_keywords?: string | null;
+          meta_robots?: string | null;
+          canonical_url?: string | null;
+          og_title?: string | null;
+          og_description?: string | null;
+          og_image_url?: string | null;
+          logo_url?: string | null;
+          favicon_url?: string | null;
+          phone?: string;
+          email?: string;
+          whatsapp_phone?: string;
+          address_street?: string | null;
+          address_locality?: string | null;
+          address_region?: string | null;
+          postal_code?: string | null;
+          address_country?: string | null;
+          address_display?: string | null;
+          contact_page_title?: string | null;
+          contact_page_subtitle?: string | null;
+          contact_hub_title?: string | null;
+          map_embed_url?: string | null;
+          map_link_url?: string | null;
+          hours_airport?: string | null;
+          hours_office?: string | null;
+          hours_response?: string | null;
+          hero_badge?: string | null;
+          hero_title?: string | null;
+          hero_subtitle?: string | null;
+          hero_image_url?: string | null;
+          hero_travelers_label?: string | null;
+          stat_1_value?: string | null;
+          stat_1_label?: string | null;
+          stat_2_value?: string | null;
+          stat_2_label?: string | null;
+          stat_3_value?: string | null;
+          stat_3_label?: string | null;
+          stat_4_value?: string | null;
+          stat_4_label?: string | null;
+          footer_description?: string | null;
+          cta_title?: string | null;
+          cta_subtitle?: string | null;
+          facebook_url?: string | null;
+          twitter_url?: string | null;
+          instagram_url?: string | null;
+          maintenance_mode?: boolean;
+          maintenance_message?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          site_name?: string;
+          site_description?: string;
+          meta_title?: string;
+          meta_keywords?: string | null;
+          meta_robots?: string | null;
+          canonical_url?: string | null;
+          og_title?: string | null;
+          og_description?: string | null;
+          og_image_url?: string | null;
+          logo_url?: string | null;
+          favicon_url?: string | null;
+          phone?: string;
+          email?: string;
+          whatsapp_phone?: string;
+          address_street?: string | null;
+          address_locality?: string | null;
+          address_region?: string | null;
+          postal_code?: string | null;
+          address_country?: string | null;
+          address_display?: string | null;
+          contact_page_title?: string | null;
+          contact_page_subtitle?: string | null;
+          contact_hub_title?: string | null;
+          map_embed_url?: string | null;
+          map_link_url?: string | null;
+          hours_airport?: string | null;
+          hours_office?: string | null;
+          hours_response?: string | null;
+          hero_badge?: string | null;
+          hero_title?: string | null;
+          hero_subtitle?: string | null;
+          hero_image_url?: string | null;
+          hero_travelers_label?: string | null;
+          stat_1_value?: string | null;
+          stat_1_label?: string | null;
+          stat_2_value?: string | null;
+          stat_2_label?: string | null;
+          stat_3_value?: string | null;
+          stat_3_label?: string | null;
+          stat_4_value?: string | null;
+          stat_4_label?: string | null;
+          footer_description?: string | null;
+          cta_title?: string | null;
+          cta_subtitle?: string | null;
+          facebook_url?: string | null;
+          twitter_url?: string | null;
+          instagram_url?: string | null;
+          maintenance_mode?: boolean;
+          maintenance_message?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      visitor_events: {
         Row: {
           id: string;
-          email: string;
-          role: "user" | "admin";
+          session_id: string;
+          page_path: string;
+          page_title: string | null;
+          referrer: string | null;
+          ip_address: string | null;
+          country: string | null;
+          country_code: string | null;
+          region: string | null;
+          city: string | null;
+          latitude: number | null;
+          longitude: number | null;
+          device_type: string | null;
+          device_os: string | null;
+          browser: string | null;
+          user_agent: string | null;
+          screen_width: number | null;
+          screen_height: number | null;
+          timezone: string | null;
+          language: string | null;
+          consent_given: boolean;
           created_at: string;
         };
-        Insert: Omit<
-          Database["public"]["Tables"]["profiles"]["Row"],
-          "created_at"
-        >;
-        Update: Partial<Database["public"]["Tables"]["profiles"]["Row"]>;
+        Insert: {
+          id?: string;
+          session_id: string;
+          page_path: string;
+          page_title?: string | null;
+          referrer?: string | null;
+          ip_address?: string | null;
+          country?: string | null;
+          country_code?: string | null;
+          region?: string | null;
+          city?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          device_type?: string | null;
+          device_os?: string | null;
+          browser?: string | null;
+          user_agent?: string | null;
+          screen_width?: number | null;
+          screen_height?: number | null;
+          timezone?: string | null;
+          language?: string | null;
+          consent_given?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          session_id?: string;
+          page_path?: string;
+          page_title?: string | null;
+          referrer?: string | null;
+          ip_address?: string | null;
+          country?: string | null;
+          country_code?: string | null;
+          region?: string | null;
+          city?: string | null;
+          latitude?: number | null;
+          longitude?: number | null;
+          device_type?: string | null;
+          device_os?: string | null;
+          browser?: string | null;
+          user_agent?: string | null;
+          screen_width?: number | null;
+          screen_height?: number | null;
+          timezone?: string | null;
+          language?: string | null;
+          consent_given?: boolean;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      gallery_images: {
+        Row: {
+          id: string;
+          image_url: string;
+          caption: string | null;
+          car_id: string | null;
+          is_visible: boolean;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          image_url: string;
+          caption?: string | null;
+          car_id?: string | null;
+          is_visible?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          image_url?: string;
+          caption?: string | null;
+          car_id?: string | null;
+          is_visible?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
       };
     };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
+    Enums: {
+      user_role: UserRole;
+      car_status: CarStatus;
+      booking_status: BookingStatus;
+      driver_status: DriverStatus;
+    };
+    CompositeTypes: Record<string, never>;
   };
-}
+};
 
+export type ProfileRow = Database["public"]["Tables"]["profiles"]["Row"];
 export type BookingRow = Database["public"]["Tables"]["bookings"]["Row"];
 export type CarRow = Database["public"]["Tables"]["cars"]["Row"];
-export type TestimonialRow =
-  Database["public"]["Tables"]["testimonials"]["Row"];
+export type DriverRow = Database["public"]["Tables"]["drivers"]["Row"];
+export type TestimonialRow = Database["public"]["Tables"]["testimonials"]["Row"];
 export type ReviewRow = Database["public"]["Tables"]["reviews"]["Row"];
+export type GalleryImageRow = Database["public"]["Tables"]["gallery_images"]["Row"];
