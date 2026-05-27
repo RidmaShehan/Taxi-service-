@@ -114,9 +114,10 @@ export async function updateSiteSettings(formData: FormData) {
     facebook_url: pickFormField(formData, "facebook_url", current),
     twitter_url: pickFormField(formData, "twitter_url", current),
     instagram_url: pickFormField(formData, "instagram_url", current),
-    maintenance_mode: formData.has("maintenance_mode")
-      ? formData.get("maintenance_mode") === "true"
-      : current.maintenance_mode,
+    maintenance_mode:
+      formData.get("maintenance_mode_update") === "1"
+        ? formData.get("maintenance_mode") === "true"
+        : current.maintenance_mode,
     maintenance_message: pickFormField(formData, "maintenance_message", current),
   });
 

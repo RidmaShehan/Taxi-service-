@@ -313,6 +313,8 @@ export function SiteSettingsForm({ settings }: Props) {
                 Or use the <strong>Maintenance ON/OFF</strong> button at the top of every admin page
                 for a quick toggle.
               </p>
+              {/* Hidden marker: when General tab is saved, server knows to read checkbox (unchecked = off) */}
+              <input type="hidden" name="maintenance_mode_update" value="1" />
               <label className="flex items-center gap-3">
                 <input
                   type="checkbox"

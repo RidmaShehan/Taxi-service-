@@ -157,7 +157,10 @@ export const siteSettingsSchema = z.object({
   facebook_url: zFormUrl,
   twitter_url: zFormUrl,
   instagram_url: zFormUrl,
-  maintenance_mode: z.preprocess((v) => v === true || v === "true", z.boolean().optional()),
+  maintenance_mode: z.preprocess(
+    (v) => v === true || v === "true",
+    z.boolean()
+  ),
   maintenance_message: zFormOptionalString,
 });
 
