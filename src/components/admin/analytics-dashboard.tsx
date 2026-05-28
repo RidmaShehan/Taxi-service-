@@ -1,14 +1,32 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import type { AnalyticsSummary } from "@/lib/actions/analytics";
 import { VisitorWorldMap } from "@/components/admin/visitor-world-map";
-import { Globe, Monitor, Users, Eye } from "lucide-react";
+import { Globe, Monitor, Users, Eye, RefreshCw } from "lucide-react";
 
 type Props = { data: AnalyticsSummary };
 
 export function AnalyticsDashboard({ data }: Props) {
+  const router = useRouter();
+
   return (
     <div className="space-y-8">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <p className="text-xs text-slate-500">
+          Data from the last 30 days. Visitors must click &quot;Accept analytics cookies&quot; on the
+          public site.
+        </p>
+        <button
+          type="button"
+          onClick={() => router.refresh()}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-700"
+        >
+          <RefreshCw className="w-4 h-4" />
+          Refresh
+        </button>
+      </div>
+
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {[
           { label: "Page views (30d)", value: data.totalPageViews, icon: Eye },
@@ -78,9 +96,6 @@ export function AnalyticsDashboard({ data }: Props) {
       <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden">
         <div className="p-6 border-b border-slate-100">
           <h3 className="font-bold text-slate-900">Recent visitor activity</h3>
-          <p className="text-xs text-slate-500 mt-1">
-            Logged when visitors accept analytics cookies (PDPA-compliant consent).
-          </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left">
@@ -98,7 +113,8 @@ export function AnalyticsDashboard({ data }: Props) {
               {data.recentEvents.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-8 text-center text-slate-400">
-                    No visits recorded yet.
+                    No visits recorded yet. Open the homepage in a private window, accept analytics
+                    cookies, then click Refresh.
                   </td>
                 </tr>
               ) : (

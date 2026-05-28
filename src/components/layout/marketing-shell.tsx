@@ -1,6 +1,4 @@
 import { ensureSiteAvailable } from "@/lib/check-maintenance";
-import { CookieConsent } from "@/components/analytics/cookie-consent";
-import { VisitorTracker } from "@/components/analytics/visitor-tracker";
 import { MarketingHeader } from "@/components/layout/marketing-header";
 import { MarketingFooter } from "@/components/layout/marketing-footer";
 import { WhatsappButton } from "@/components/layout/whatsapp-button";
@@ -16,8 +14,6 @@ export async function MarketingShell({ children, showWhatsapp = true }: Props) {
 
   return (
     <>
-      <CookieConsent />
-      <VisitorTracker />
       <MarketingHeader settings={settings} />
       {children}
       <MarketingFooter settings={settings} />

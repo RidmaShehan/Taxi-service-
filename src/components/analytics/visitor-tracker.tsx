@@ -18,27 +18,47 @@ function getOrCreateSessionId(): string {
   return id;
 }
 
-function trackPageView(pathname: string) {
+async function trackPageView(pathname: string, retry = 0): Promise<void> {
   if (getAnalyticsConsent() !== "accepted") return;
 
   const sessionId = getOrCreateSessionId();
 
-  void fetch("/api/analytics/track", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      session_id: sessionId,
-      page_path: pathname,
-      page_title: typeof document !== "undefined" ? document.title : "",
-      referrer: typeof document !== "undefined" ? document.referrer || null : null,
-      screen_width: typeof window !== "undefined" ? window.screen.width : null,
-      screen_height: typeof window !== "undefined" ? window.screen.height : null,
-      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-      language: typeof navigator !== "undefined" ? navigator.language : null,
-      consent: true,
-    }),
-    keepalive: true,
-  }).catch(() => {});
+  try {
+    const res = await fetch("/api/analytics/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        session_id: sessionId,
+        page_path: pathname,
+        page_title: typeof document !== "undefined" ? document.title : "",
+        referrer: typeof document !== "undefined" ? document.referrer || null : null,
+        screen_width: typeof window !== "undefined" ? window.screen.width : null,
+        screen_height: typeof window !== "undefined" ? window.screen.height : null,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        language: typeof navigator !== "undefined" ? navigator.language : null,
+        consent: true,
+      }),
+      keepalive: true,
+    });
+
+    if (!res.ok && retry < 2) {
+      await new Promise((r) => setTimeout(r, 800));
+      return trackPageView(pathname, retry + 1);
+    }
+
+    if (!res.ok && process.env.NODE_ENV === "development") {
+      const data = (await res.json().catch(() => ({}))) as { detail?: string; error?: string };
+      console.warn("[analytics]", data.detail ?? data.error ?? res.status);
+    }
+  } catch (err) {
+    if (retry < 2) {
+      await new Promise((r) => setTimeout(r, 800));
+      return trackPageView(pathname, retry + 1);
+    }
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[analytics] track failed", err);
+    }
+  }
 }
 
 export function VisitorTracker() {
@@ -48,7 +68,7 @@ export function VisitorTracker() {
   useEffect(() => {
     const onConsent = () => {
       if (getAnalyticsConsent() === "accepted" && pathname) {
-        trackPageView(pathname);
+        void trackPageView(pathname);
       }
     };
     window.addEventListener("lr-consent-change", onConsent);
@@ -58,7 +78,7 @@ export function VisitorTracker() {
   useEffect(() => {
     if (!pathname || pathname === lastPath.current) return;
     lastPath.current = pathname;
-    trackPageView(pathname);
+    void trackPageView(pathname);
   }, [pathname]);
 
   return null;

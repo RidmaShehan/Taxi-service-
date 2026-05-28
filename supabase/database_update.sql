@@ -412,6 +412,12 @@ create policy "Admins read visitor events"
   on public.visitor_events for select
   using (public.is_admin());
 
+drop policy if exists "Allow consent-based visitor insert" on public.visitor_events;
+create policy "Allow consent-based visitor insert"
+  on public.visitor_events for insert
+  to anon, authenticated, service_role
+  with check (consent_given = true);
+
 -- -----------------------------------------------------------------------------
 -- 10. Promote your admin user (EDIT EMAIL before running)
 -- -----------------------------------------------------------------------------

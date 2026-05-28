@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createAnalyticsSupabase } from "@/lib/analytics-supabase";
 import { requireAdmin } from "@/lib/require-admin";
 
 export type VisitorEvent = {
@@ -51,9 +51,15 @@ export type AnalyticsSummary = {
 
 export async function getVisitorAnalytics(): Promise<AnalyticsSummary | { error: string }> {
   const auth = await requireAdmin();
-  if (auth.error || !auth.supabase) return { error: auth.error ?? "Unauthorized" };
+  if (auth.error) return { error: auth.error };
 
-  const supabase = auth.supabase;
+  let supabase;
+  try {
+    supabase = createAnalyticsSupabase();
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Supabase not configured" };
+  }
+
   const since = new Date();
   since.setDate(since.getDate() - 30);
 
@@ -64,7 +70,13 @@ export async function getVisitorAnalytics(): Promise<AnalyticsSummary | { error:
     .order("created_at", { ascending: false })
     .limit(500);
 
-  if (error) return { error: error.message };
+  if (error) {
+    const hint =
+      error.code === "42P01"
+        ? " Run migration 20250525000004_branding_analytics.sql in Supabase SQL Editor."
+        : "";
+    return { error: error.message + hint };
+  }
 
   const rows = (events ?? []) as VisitorEvent[];
   const sessions = new Set(rows.map((r) => r.session_id));

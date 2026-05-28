@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { PublicAnalytics } from "@/components/analytics/public-analytics";
 import { getSiteSettings } from "@/lib/actions/site-settings";
 import "./globals.css";
 
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-slate-950 text-slate-50 antialiased`}
       >
+        <PublicAnalytics />
         {children}
       </body>
     </html>

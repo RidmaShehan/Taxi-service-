@@ -1,10 +1,11 @@
 import { getVisitorAnalytics } from "@/lib/actions/analytics";
+import { isAnalyticsError } from "@/lib/analytics-types";
 import { AnalyticsDashboard } from "@/components/admin/analytics-dashboard";
 
 export default async function AdminAnalyticsPage() {
   const result = await getVisitorAnalytics();
 
-  if ("error" in result) {
+  if (isAnalyticsError(result)) {
     return (
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold text-slate-900 mb-4">Visitor analytics</h1>

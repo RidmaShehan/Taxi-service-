@@ -22,36 +22,41 @@ function isPrivateIp(ip: string): boolean {
   return false;
 }
 
-/** Resolve approximate location from IP (ip-api.com free tier, non-commercial). */
+/** Resolve approximate location from IP (HTTPS, 3s timeout). */
 export async function lookupGeoFromIp(ip: string): Promise<GeoLocation> {
   if (isPrivateIp(ip)) return EMPTY_GEO;
 
   try {
-    const res = await fetch(
-      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,country,countryCode,regionName,city,lat,lon`,
-      { next: { revalidate: 3600 } }
-    );
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 3000);
+
+    const res = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    clearTimeout(timeout);
+
     if (!res.ok) return EMPTY_GEO;
 
     const data = (await res.json()) as {
-      status?: string;
+      success?: boolean;
       country?: string;
-      countryCode?: string;
-      regionName?: string;
+      country_code?: string;
+      region?: string;
       city?: string;
-      lat?: number;
-      lon?: number;
+      latitude?: number;
+      longitude?: number;
     };
 
-    if (data.status !== "success") return EMPTY_GEO;
+    if (!data.success) return EMPTY_GEO;
 
     return {
       country: data.country ?? null,
-      country_code: data.countryCode ?? null,
-      region: data.regionName ?? null,
+      country_code: data.country_code ?? null,
+      region: data.region ?? null,
       city: data.city ?? null,
-      latitude: typeof data.lat === "number" ? data.lat : null,
-      longitude: typeof data.lon === "number" ? data.lon : null,
+      latitude: typeof data.latitude === "number" ? data.latitude : null,
+      longitude: typeof data.longitude === "number" ? data.longitude : null,
     };
   } catch {
     return EMPTY_GEO;

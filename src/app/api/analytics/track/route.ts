@@ -1,39 +1,47 @@
 import { NextResponse } from "next/server";
-import { createServiceClient } from "@/lib/supabase/server";
+import { createAnalyticsSupabase } from "@/lib/analytics-supabase";
 import { getClientIp, lookupGeoFromIp } from "@/lib/geoip";
 import { parseUserAgent } from "@/lib/parse-user-agent";
 
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
+  let body: {
+    session_id?: string;
+    page_path?: string;
+    page_title?: string;
+    referrer?: string;
+    screen_width?: number;
+    screen_height?: number;
+    timezone?: string;
+    language?: string;
+    consent?: boolean;
+  };
+
   try {
-    const body = (await request.json()) as {
-      session_id?: string;
-      page_path?: string;
-      page_title?: string;
-      referrer?: string;
-      screen_width?: number;
-      screen_height?: number;
-      timezone?: string;
-      language?: string;
-      consent?: boolean;
-    };
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
 
-    if (!body.consent) {
-      return NextResponse.json({ ok: false, reason: "no_consent" }, { status: 400 });
-    }
+  if (!body.consent) {
+    return NextResponse.json({ ok: false, reason: "no_consent" }, { status: 400 });
+  }
 
-    if (!body.session_id || !body.page_path) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
-    }
+  if (!body.session_id?.trim() || !body.page_path?.trim()) {
+    return NextResponse.json({ error: "Missing session_id or page_path" }, { status: 400 });
+  }
 
+  try {
     const ip = getClientIp(request.headers);
     const ua = request.headers.get("user-agent");
     const parsed = parseUserAgent(ua);
     const geo = await lookupGeoFromIp(ip);
 
-    const supabase = await createServiceClient();
+    const supabase = createAnalyticsSupabase();
     const { error } = await supabase.from("visitor_events").insert({
-      session_id: body.session_id.slice(0, 64),
-      page_path: body.page_path.slice(0, 500),
+      session_id: body.session_id.trim().slice(0, 64),
+      page_path: body.page_path.trim().slice(0, 500),
       page_title: body.page_title?.slice(0, 200) ?? null,
       referrer: body.referrer?.slice(0, 500) ?? null,
       ip_address: ip.slice(0, 45),
@@ -55,12 +63,23 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error("visitor_events insert:", error.message);
-      return NextResponse.json({ error: "Failed to record visit" }, { status: 500 });
+      console.error("[analytics/track]", error.message, error.code);
+      return NextResponse.json(
+        {
+          error: "Failed to save visit",
+          detail:
+            error.code === "42P01"
+              ? "visitor_events table missing — run supabase/migrations/20250525000004_branding_analytics.sql"
+              : error.message,
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ ok: true });
-  } catch {
-    return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Server error";
+    console.error("[analytics/track]", message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
