@@ -12,7 +12,7 @@ export function TrustBadges() {
             </div>
             <h3 className="text-lg font-bold text-slate-900 mb-3">24/7 Availability</h3>
             <p className="text-sm text-slate-600 leading-relaxed max-w-[250px]">
-              Any time, day or night. We're ready for your arrival or departure.
+              Any time, day or night. We&apos;re ready for your arrival or departure.
             </p>
           </div>
 

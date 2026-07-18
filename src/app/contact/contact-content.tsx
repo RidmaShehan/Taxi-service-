@@ -241,7 +241,7 @@ export function ContactContent({ settings }: Props) {
                   Ready to Book?
                 </div>
                 <p className="text-sm text-slate-600 mb-6">
-                  Don't wait! Secure your comfortable ride across the paradise island today.
+                  Don&apos;t wait! Secure your comfortable ride across the paradise island today.
                 </p>
                 <Link href="/booking" className="block w-full text-center bg-[#1e90ff] hover:bg-blue-600 text-white py-3.5 rounded-xl text-sm font-bold transition-colors">
                   Go to Booking Page

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Car, Users, Luggage } from "lucide-react";
+import { Users, Luggage } from "lucide-react";
 
 const featuredCars = [
   {

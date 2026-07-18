@@ -24,7 +24,9 @@ export function CookieConsent() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (getAnalyticsConsent() === "pending") setVisible(true);
+    if (getAnalyticsConsent() === "pending") {
+      setTimeout(() => setVisible(true), 0);
+    }
   }, []);
 
   if (!visible) return null;
